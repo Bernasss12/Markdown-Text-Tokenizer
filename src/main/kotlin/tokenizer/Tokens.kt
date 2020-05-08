@@ -2,10 +2,10 @@ package tokenizer
 
 import java.awt.Color
 
-interface IToken
+sealed class IToken
 
 /* Normal Token that stores the text and the formatting tags of said text. */
-class Token(var str: String, private val tags: MutableList<Tokenizer.TokenTag>, val color: Color = Color.WHITE) : IToken {
+class Token(var str: String, private val tags: MutableList<Tokenizer.TokenTag>, val color: Color = Color.WHITE) : IToken() {
     override fun toString(): String {
         val opt = if (color != Color.WHITE) "| Color: ${color.toString()} " else ""
         return "Text: $str | Tags: $tags $opt"
@@ -13,7 +13,7 @@ class Token(var str: String, private val tags: MutableList<Tokenizer.TokenTag>, 
 }
 
 /* Header token, stores all the tokens that are apart of the header. */
-class TokenHeader(val tokens: MutableList<IToken>) : IToken {
+class TokenHeader(val tokens: MutableList<IToken>) : IToken() {
     // Debugging purposes only
     override fun toString(): String {
         var str = "\nHeader -↓-        \n"
@@ -26,7 +26,7 @@ class TokenHeader(val tokens: MutableList<IToken>) : IToken {
 }
 
 /* Image token, stores a token list in case the image is not correctly loaded as well as the image's path*/
-class TokenImage(val tokens: MutableList<IToken>, val url: String) : IToken {
+class TokenImage(val tokens: MutableList<IToken>, val url: String) : IToken() {
     override fun toString(): String {
         var alt = "\nImage -↓-        \n Tokens: \n"
         tokens.forEach {
@@ -37,21 +37,21 @@ class TokenImage(val tokens: MutableList<IToken>, val url: String) : IToken {
 }
 
 /* Link token, stores the linked string, as well as the 'url'. */
-class TokenLink(val str: String, val url: String) : IToken {
+class TokenLink(val str: String, val url: String) : IToken() {
     override fun toString(): String {
         return "Text: \"$str\" | Target: \"$url\""
     }
 }
 
 /* Item token, stores the alternative name, in case the item is not recognized, as well as the unlocalized name of the desired item */
-class TokenItem(val name: String, val item: String) : IToken {
+class TokenItem(val name: String, val item: String) : IToken() {
     override fun toString(): String {
         return "Name: \"$name\" | Target item: \"$item\""
     }
 }
 
 /* LineBreak token, simply represents a line break in the text. */
-class TokenLineBreak : IToken {
+class TokenLineBreak : IToken() {
     override fun toString(): String {
         return "Linebreak: \\n"
     }
